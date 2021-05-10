@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <title></title>
+      <link rel="stylesheet" href="styles/kendo.common.min.css" />
+      <link rel="stylesheet" href="styles/kendo.default.min.css" />
+      <link rel="stylesheet" href="styles/kendo.mobile.all.min.css" />
+
+      <script src="js/jquery.min.js"></script>
+      <script src="js/kendo.all.min.js"></script>    
+  </head>
+  
+  <body>
+    <div data-role="view" data-title="團體課程" id="actionsheet-view" data-use-native-scrolling="true" style="font-family:  'Noto Sans TC' " data-show="dataAlreadyShown">
+        <!--<h3 id="actionResult">TEST</h3>-->
+        <ul data-role="listview" data-source="courseDetail" data-template="courseItemTemplate" class="courseList"></ul>
+        <div style="margin-left:20px; margin-right:20px">
+          <hr>
+          <h3 id="與運動中心距離">與運動中心距離: </h3>
+          <h3 id="課程開始時間">課程開始時間: </h3>
+          <h3 id="手機現在時間">手機現在時間: </h3>          
+        </div>
+    </div>
+
+
+    <script type="script/x-kendo-template" id="courseItemTemplate">
+        <a class="reply km-primary km-button-right"
+        style="color: white" 
+        data-role="button"
+        onclick="繳費(#:ID#)" 
+        id = "繳費按鈕#:ID#"
+        data-actionsheet-context="#:ID#">未繳費</a>
+
+        <a class="reply km-primary km-button-right"
+        style="color: white" 
+        data-role="button"
+        onclick="簽到(#:ID#)" 
+        id = "簽到按鈕#:ID#"
+        data-actionsheet-context="#:ID#">簽到</a>
+
+        <img id="courseDetailPicUrl" src="#: 課程圖片 #" width="150" height="150" style="float:left;margin-right:10px"/> 
+        <br><br><br><br><br><br>
+        <h4>課程編號: #: 課程編號 #</h4>
+        <h4>課程名稱: #: 課程名稱 #</h4>
+        <h4>老師姓名: #: 老師姓名 #</h4>
+        <h4>助教姓名: #: 助教姓名 #</h4>
+        <h4>上課時間: #: 上課時間 #</h4>    
+        <h4>燃燒熱量: #: 燃燒熱量 #</h4>  
+        <h4>課程人數: #: 課程人數 #</h4> 
+        <h4>課程費用: #: 課程費用 #</h4>    
+        <h4>其他說明: #: 其他說明 #</h4>
+        <hr>
+        <h4>報名人數: #: 報名人數 #</h4>
+        <h4>繳費人數: #: 繳費人數 #</h4> 
+    </script>
+
+    <script>
+      var hrefString = window.location.href;
+      var inputParamString = hrefString.split("?");
+      console.log(inputParamString);
+      
+      var courseId = inputParamString[inputParamString.length-1].split("=")[1];
+
+      //var courseNum = parseInt(courseId.substring(1,5));
+      console.log(courseId);
+      var idNum = 0;
+      var courseDetail=[];  
+
+      updateCourseDetail();
+
+      //檢查位置
+      var distance  = calcDistance(目前位置經度, 目前位置緯度, 場所位置經度, 場所位置緯度);
+      var distance1 = calcDistance(目前位置經度, 目前位置緯度, 場所位置1經度, 場所位置1緯度);
+      var distance2 = calcDistance(目前位置經度, 目前位置緯度, 場所位置2經度, 場所位置2緯度);      
+      console.log("距離",distance, distance1, distance2);
+
+      //檢查日期時間
+      var courseDateArr;
+      var courseTimeStart, courseTimeEnd;
+      
+      function updateCourseDetail(){    
+        courseData.forEach(function(course, ind, arr){
+          if (course[0]==courseId) {
+            idNum++;
+            //console.log(course, ind);
+            var 課程圖片Url = ( course[11] !="" )?course[11]:"picPlaceholder.png";             
+            var courseDetailItem = {
+              "ID": idNum,
+              "課程編號": course[0],
+              "課程名稱": course[1],
+              "老師姓名": course[2],
+              "助教姓名": course[9],          
+              "上課時間": course[3],  
+              "燃燒熱量": course[4],
+              "課程人數": course[6],
+              "課程費用": course[5],
+              "其他說明": course[10],
+              "報名人數": course[7],
+              "繳費人數": course[8],    
+              "課程圖片": 課程圖片Url,
+            };
+            courseDetail.push(courseDetailItem);
+            
+            courseDateArr = course[3].split(" ");
+            courseTimeStart = courseDateArr[1].substring(0,5);
+//            courseTimeEnd = courseDateArr[1].substring(courseDateArr[1].length-5,courseDateArr[1].length); 
+            var tmpStr = courseDateArr[courseDateArr.length-1];
+            courseTimeEnd = tmpStr.substring(tmpStr.length -5, tmpStr.length);   
+            console.log(courseDateArr, courseTimeStart, courseTimeEnd);
+          }
+        });
+      }
+      
+      function 繳費() {
+        alert("請到櫃檯繳費");
+      }
+
+      function 簽到() {
+        console.log("簽到: ", userName, courseId, userId[1], userPhoneNumber);
+        
+        // 考慮使用 library https://js-joda.github.io/js-joda/manual/usage.html
+        
+        //檢查時間
+//        var 現在日期及時間 = new Date();
+//        var 今天日期 = 現在日期及時間.toLocaleDateString();
+//        var 現在時間 = 現在日期及時間.toLocaleTimeString();
+//        今天日期 = 今天日期.replace(/\//g,"-");
+//        var 上下午  = 現在時間.substring(0,2);
+//        var 時間切割 = 現在時間.substring(2,現在時間.length).split(":");
+//        時間切割[0] = (上下午=="上午")? 時間切割[0]: (parseInt(時間切割[0])+12).toString();
+//        
+//        console.log("bbb", 時間切割[0]);
+//        if (時間切割[0]=="24") {
+//          時間切割[0] = "00";
+//        }
+//        
+//        if (時間切割[0].length<2) 時間切割[0] = "0"+時間切割[0];
+//        if (時間切割[1].length<2) 時間切割[1] = "0"+時間切割[1];        
+//        現在時間=時間切割[0]+":"+時間切割[1];
+//        
+//        // 擴長課程檢查時間前 30 分鐘及結束後 30 分鐘
+//        var beforeStart = courseTimeStart.split(":");
+//        var extendRange = 30;
+//        var deltaMin = parseInt(beforeStart[1]) - extendRange;
+//        if (deltaMin < 0) {
+//          beforeStart[1] = String(deltaMin+60);
+//          beforeStart[0] = String(parseInt(beforeStart[0]) - 1);
+//        } else {
+//          beforeStart[1] = String(deltaMin);          
+//        }
+//        if (beforeStart[0].length<2) beforeStart[0] = "0"+beforeStart[0];         
+//        if (beforeStart[1].length<2) beforeStart[1] = "0"+beforeStart[1];        
+//        var extendStart = beforeStart[0]+":"+beforeStart[1];
+//
+//        var afterEnd = courseTimeEnd.split(":");
+//        var extendRange = 30;
+//        var deltaMin = parseInt(afterEnd[1]) + extendRange;
+//        if (deltaMin > 59) {
+//          afterEnd[1] = String(deltaMin-60);
+//          afterEnd[0] = String(parseInt(afterEnd[0]) + 1);
+//        } else {
+//          afterEnd[1] = String(deltaMin);          
+//        }
+//        if (afterEnd[0].length<2) afterEnd[0] = "0"+afterEnd[0];         
+//        if (afterEnd[1].length<2) afterEnd[1] = "0"+afterEnd[1];           
+//        var extendEnd = afterEnd[0]+":"+afterEnd[1];        
+//        
+//        console.log(今天日期, 現在時間, extendStart, extendEnd);
+//        
+//        if ( (courseDateArr[0]==今天日期) &&
+//          //(現在時間 > courseTimeStart) &&
+//          //(現在時間 < courseTimeEnd) ) {
+//          //console.log("可以簽到");
+//          (現在時間 > extendStart) &&
+//          (現在時間 < extendEnd) ) {            
+//        } else {
+//          alert("未到課程日期及時間，不可以簽到");
+//          return 1;
+//        }
+        
+        var courseStartTime = new Date(courseDateArr[0]+" "+courseTimeStart);
+        var courseStartInMs = courseStartTime.getTime() - 30*60; // extend for 3o min
+        var courseEndTime   = new Date(courseDateArr[0]+" "+courseTimeEnd);
+        var courseEndInMs   = courseEndTime.getTime()   - 30*60; // extend for 3o min        
+        
+        var nowTimeInMs     = Date.now();
+        console.log(courseEndTime - courseStartInMs);
+        
+        $("#手機現在時間").text("手機現在時間: "+String(nowTimeInMs)+","+String(courseStartInMs)+","+String(courseEndInMs) );
+        
+        if(nowTimeInMs < courseStartInMs){
+          alert("未到課程日期及時間，不可以簽到");
+          return 1;
+        } else if (nowTimeInMs > courseEndTime){
+          alert("課程日期及時間已過，不可以簽到");
+          return 1;          
+        }
+            
+            
+        //檢查距離
+        //以下方法參考 https://stackoverflow.com/questions/7540397/convert-nan-to-0-in-javascript
+        distance  = ++distance  || 100000; //convert NaN to a long distance
+        distance1 = ++distance1 || 100000; //需要加上 ++，否則 0 也會被當作 0 而變成 100000
+        distance2 = ++distance2 || 100000;  
+        console.log(distance, distance1, distance2);
+        if ((distance > 1000) && (distance1 > 1000) && (distance2 > 1000)) {
+          alert("距離運動中心太遠，不可以簽到");
+          return 1;
+        }
+        
+        console.log("可以簽到");
+        
+        //.?API=21&UserName&CourseId&UserId&PhoneNumber
+        var request = new XMLHttpRequest();
+        var paramToSend = "?API=21&"+"UserName="+userName+"&CourseId="+courseId+"&UserId="+userId[1]+"&PhoneNumber="+userPhoneNumber;
+        console.log(paramToSend); 
+        if (useLocalAPIs) {
+          request.open('GET', 'http://localhost:5000' + paramToSend, true);
+        } else {
+          request.open('GET', apiSite +paramToSend, true);
+        }      
+
+        request.onload = function() {
+          var responseMsg = this.response;
+
+          console.log(responseMsg);
+
+          //responseMsg="API:21 會員報名成功"; //故意測試錯誤         
+          if (responseMsg != "API:21 會員簽名成功") {
+            console.log(responseMsg);
+            alert("課程簽到失敗，請稍後再試，或洽櫃台人員");
+          } else {
+            $("#簽到按鈕"+idNum.toString()).text("已簽到");
+            $("#簽到按鈕"+idNum.toString()).css("background-color", "grey");                       
+            $("#簽到按鈕"+idNum.toString()).css("border-style", "none");           
+            setEnabled($("#簽到按鈕"+idNum.toString()), false);
+
+            reloadCourseNeeded = true;
+          }
+        } 
+        request.send();        
+        
+      }
+      
+      function dataAlreadyShown(){
+        console.log("data-view 已顯示");
+        // 查詢是否已繳費
+        $("#繳費按鈕"+idNum.toString()).text("請繳費");     
+        //$("#繳費按鈕"+idNum.toString()).css("background-color", "grey");  
+        //$("#繳費按鈕"+idNum.toString()).css("border-style", "none");              
+        //setEnabled($('#繳費按鈕'+idNum.toString()), false);    
+        
+        courseMember.forEach(function(course, index, array){
+          if (course[0]==courseId) {
+            for (var i=1; i< course.length;i++){
+              //console.log(course[i][3]);
+              if (course[i][3]== userId[1] && course[i][1]=="已繳費") {
+                console.log(course[i][1]);
+                $("#繳費按鈕"+idNum.toString()).text("已繳費");   
+                $("#繳費按鈕"+idNum.toString()).css("background-color", "grey");  
+                $("#繳費按鈕"+idNum.toString()).css("border-style", "none");  
+                setEnabled($('#繳費按鈕'+idNum.toString()), false);     
+              } else if (course[i][3]== userId[1] && course[i][1]=="免費") {
+                console.log(course[i][1]);
+                $("#繳費按鈕"+idNum.toString()).text("免費");   
+                $("#繳費按鈕"+idNum.toString()).css("background-color", "grey");  
+                $("#繳費按鈕"+idNum.toString()).css("border-style", "none");  
+                setEnabled($('#繳費按鈕'+idNum.toString()), false);     
+              }
+                        
+              if (course[i][3]== userId[1] && course[i][2]=="已簽到") {
+                console.log(course[i][2]);
+                $("#簽到按鈕"+idNum.toString()).text("已簽到");   
+                $("#簽到按鈕"+idNum.toString()).css("background-color", "grey");  
+                $("#簽到按鈕"+idNum.toString()).css("border-style", "none");  
+                setEnabled($('#簽到按鈕'+idNum.toString()), false); 
+              }               
+            }
+          }
+        });
+        
+        $("#與運動中心距離").text("與運動中心距離(m): " + Math.floor(distance.toString()) + ", " 
+                                                  + Math.floor(distance1.toString()) + ", " 
+                                                  + Math.floor(distance2.toString())  );  
+        $("#課程開始時間").text("課程開始時間: "+courseDateArr[0]+" 從 "+courseTimeStart+" 到 "+courseTimeEnd);
+        
+        var nowDate = new Date();
+        $("#手機現在時間").text("手機現在時間: "+nowDate.toLocaleDateString()+nowDate.toLocaleTimeString());
+      }
+
+    </script>
+
+
+    <script>
+      //以下必須 remark 掉，不然會有問題
+      //var app = new kendo.mobile.Application(document.body, { skin: "nova" });
+    </script>
+
+  </body>
+</html>

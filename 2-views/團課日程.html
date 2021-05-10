@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>html { font-size: 14px; font-family: Arial, Helvetica, sans-serif; }</style>
+  <title></title>
+  <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.common.min.css" />
+  <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.default.min.css" />
+  <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.mobile.all.min.css" />
+
+  <script src="https://kendo.cdn.telerik.com/2020.1.114/js/jquery.min.js"></script>
+  <script src="https://kendo.cdn.telerik.com/2020.1.114/js/kendo.all.min.js"></script>
+    
+</head>
+<body>
+  <div data-role="view" data-init="initData"  data-title="團課日程" style="text-align: center;font-family: 'Noto Sans TC'" data-use-native-scrolling="true">
+<!--
+    <header data-role="header">
+      <div data-role="navbar" id="normal" class="km-accent">
+        <a data-align="left" data-role="button" onclick="app.navigate('#:back')" data-rel="" data-icon=""></a>           
+        <a data-align="right" data-role="button" href="#forms" data-rel="" data-icon="contacts"></a>       
+        <span data-role="view-title"></span>   
+      </div>
+    </header>   
+-->
+    <a id="查看課程表header" class="km-primary km-button-center" style="width:100%; font-size: 18px; color: white; margin-left: 0px; " data-role="button" onclick="查看及收起課程表()"
+     >查看課程表 ▼</a>
+     <div id="課表圖片Div" style="display:none">
+       <img id="課表圖片" src="索取課程表.png" width="100%" onerror="this.src='索取課程表.png'"/>
+       <a class="km-primary km-button-center" style="width:100%; font-size: 18px; color: white; margin-left: 0px; " data-role="button" onclick="查看及收起課程表()">收起課程表 ▲</a>  
+     </div>        
+      
+    <div id="團課日程Div">         
+      <div id="calendar"></div>
+      
+      <div style="height: 20px"></div>
+      <button class="reply km-primary km-button-left" style="color: white; margin-left: 20px; background-color: red; border-color:teal" data-role="button" onclick="查看所有課程()" id="查看所有課程按鈕">查看所有課程</button> 
+      
+      <button class="reply km-primary km-button-right" style="color: white; margin-right: 20px; background-color: teal; border-color:teal" data-role="button" onclick="顯示系列課程()" id="顯示系列課程按鈕">顯示系列課程</button> 
+                
+      <br><br>   
+      <hr>
+      <div>
+        <ul id="courseTable"></ul>        
+      </div> 
+    </div>
+              
+    <div id="報名表格" style="display: none; text-align: left; margin-left: 20px" > 
+      <img id="報名表格課程圖片" src="picPlaceholder.png" width="150" height="150" style="float:left;margin-top:10px"/> 
+      <br><br><br><br><br><br><br><br><br>    
+      <h2 id="報名表格課程編號">課程編號: #: 課程編號 #</h2>
+      <h2 id="報名表格課程名稱">課程名稱: #: 課程名稱 #</h2>
+      <h2 id="報名表格老師姓名">老師姓名: #: 老師姓名 #</h2>
+      <h2 id="報名表格助教姓名">助教姓名: #: 助教姓名 #</h2>
+      <h2 id="報名表格上課時間">上課時間: #: 上課時間 #</h2>    
+      <h2 id="報名表格燃燒熱量">燃燒熱量: #: 燃燒熱量 #</h2>  
+      <h2 id="報名表格課程人數">課程人數: #: 課程人數 #</h2> 
+      <h2 id="報名表格課程費用">課程費用: #: 課程費用 #</h2>    
+      <h2 id="報名表格其他說明">其他說明: #: 其他說明 #</h2>
+      <hr style="margin-right: 20px">
+      <h2 id="報名表格報名人數">報名人數: #: 報名人數 #</h2>
+      <h2 id="報名表格繳費人數">繳費人數: #: 繳費人數 #</h2>
+
+      <a class="km-primary km-button-left" data-role="button"
+      style="color: white; margin: 20px 20px 20px 0px; font-size: 16px" 
+      onclick="確定報名()" id = "確定報名按鈕"
+      >確定報名</a>
+
+      <a class="km-secondary" data-role="button"
+      style="color: gray; margin:20px; font-size: 16px" 
+      onclick="取消報名()" id = "取消報名按鈕"
+      >取消報名</a>  
+
+      <h3 style="margin-right: 20px">如果顯示資料不完整，請在空白處往下拉一下，再點一下空白處，就可顯示正常。</h3>       
+          
+    </div>
+  </div>
+    
+  <script type="text/x-kendo-template" id="course-template">
+      <a class="reply km-primary km-button-right"
+      style="color: white" 
+      data-role="button"
+      onclick="報名課程('#: 課程編號 #')" 
+      id = "報名按鈕#: 課程編號 #"
+      >報名</a>
+
+      <div style="text-align:left;">
+      <img src="#: 課程圖片 #" width="70" height="70" style="float:left;margin-right:10px"/>          
+      <p style="font-size:12px; color: gray; margin-top:-4px"> #: 課程編號 # </p>
+      <p style="font-size:16px; color: darkslategray;  margin-top:-4px font-weight:bold">#: 課程名稱 # </p>
+      <p style="font-size:12px; color: gray;  margin-top:-4px">#: 老師時間 # </p>
+      <p style="font-size:12px; color: gray;  margin-top:-4px">#: 課程費用 # </p> 
+      </div>
+
+  </script>
+
+  <script>
+    var dataSource;
+    console.log("enter 團課日程.html");
+    
+    系列課程展開 = false;
+    課表狀態    ="收起";
+    
+    讀取課表圖片();
+        
+    function initData(e) {
+      console.log("initData");
+
+      //initDataSource();
+      dataSource = new kendo.data.DataSource({    
+          data: [],
+          schema: {
+              total: function () { 
+                return 77; }
+          },            
+          serverPaging: true,
+          pageSize: 40
+      });   
+      
+      $("#courseTable").kendoMobileListView({
+          dataSource: dataSource,
+          pullToRefresh: false,            
+          template: $("#course-template").text()            
+      });
+
+      $("#calendar").kendoCalendar({
+          change: onChange,
+          navigate: onNavigate
+      });
+      
+      // 修正進入團課日程沒顯示當天課程的問題
+      var today = new Date();
+      var todayStr = today.toLocaleDateString();
+      日曆選擇的日期 = todayStr.replace(/\//g,"-");
+      onChange(日曆選擇的日期);
+
+    }    
+        
+    function 報名課程(courseId){
+      ///?API=20&UserName=小華&CourseId=U0002&UserId=U722be0c9c9d36e011c0e556bd2047819&PhoneNumber=09XXXXX333
+      想報名的courseId = courseId;
+      
+      console.log("報名課程", courseId, userId[1],userPhoneNumber);
+      要報名的課程 = courseId;
+      
+      courseData.forEach(function(course, index, array){
+        if (course[0] == courseId) {
+          //console.log(courseId, "is found");
+          $("#報名表格課程編號").text("課程編號: "+course[0]);        
+          $("#報名表格課程名稱").text("課程名稱: "+course[1]);  
+          $("#報名表格老師姓名").text("老師姓名: "+course[2]);        
+          $("#報名表格助教姓名").text("助教姓名: "+course[9]);    
+          $("#報名表格上課時間").text("上課時間: "+course[3]);        
+          $("#報名表格燃燒熱量").text("燃燒熱量: "+course[4]);  
+          $("#報名表格課程人數").text("課程人數: "+course[6]);        
+          $("#報名表格課程費用").text("課程費用: "+course[5]);  
+          $("#報名表格其他說明").text("其他說明: "+course[10]);          
+          $("#報名表格報名人數").text("報名人數: "+course[7]);  
+          $("#報名表格繳費人數").text("繳費人數: "+course[8]);   
+          
+          $("#報名表格課程圖片").attr("src", course[11]);
+        }
+      });
+      
+      
+      $("#團課日程Div").hide();
+      $("#報名表格").show()
+
+    }  
+
+    function 取消報名(){
+      console.log("取消報名");
+      $("#團課日程Div").show();
+      $("#報名表格").hide()
+    }
+    
+    function emptyDataSource(){
+      try {
+        var numToDel = dataSource.lastRange().end;
+        for (var i=0; i< numToDel; i++){
+          var toDel = dataSource.at(0);
+          dataSource.remove(toDel);
+        }
+      }catch(e){
+        console.log(e);
+      }
+    }
+      
+    function 顯示系列課程() {
+      console.log("顯示系列課程");
+      
+      if (系列課程展開 == true) {
+        
+        系列課程展開 = false;
+        $("#顯示系列課程按鈕").text("顯示系列課程");
+        $("#顯示系列課程按鈕").css("background-color", "teal");
+        $("#顯示系列課程按鈕").css("border-color", "teal");          
+
+      } else {
+        
+        系列課程展開 = true;
+        $("#顯示系列課程按鈕").text("隱藏系列課程"); 
+        $("#顯示系列課程按鈕").css("background-color", "LightSeaGreen");
+        $("#顯示系列課程按鈕").css("border-color", "LightSeaGreen");         
+      }
+      
+      onChange(日曆選擇的日期);
+    }
+
+    function 查看所有課程(){
+      console.log("查看所有課程");
+
+      emptyDataSource();
+      
+      if (所有課程展開==true){
+        所有課程展開 = false;
+        $("#查看所有課程按鈕").text("只看當天課程");
+        $("#查看所有課程按鈕").css("background-color", "LightSeaGreen");
+        $("#查看所有課程按鈕").css("border-color", "LightSeaGreen");         
+
+        courseData.forEach(function(course, index, array){
+          var 課程圖片Url = (course[11]!=undefined)? course[11]: "picPlaceholder.png";
+          dataSource.add({  
+            "課程編號": course[0],
+            "課程名稱": course[1],
+            "老師姓名": course[2],
+            "助教姓名": course[9],          
+            "上課時間": course[3],  
+            "燃燒熱量": course[4],
+            "課程人數": course[6],
+            "課程費用": course[5],
+            "其他說明": course[10],
+            "報名人數": course[7],
+            "繳費人數": course[8],     
+            "老師時間": course[2] + " | " + course[3],   
+            "課程圖片": 課程圖片Url,
+            //"url": "2-views/course報名.html?courseId=" + "U0003",                  
+            //"ProductName": "一起來運動",
+            //"UnitPrice": 100
+          });   
+
+          courseMember.forEach(function(item, index, array){
+            if (course[0]==item[0]){
+
+              for (var i=1; i< item.length; i++) {
+                //console.log(item[i][3],userId[1]);
+                if (item[i][3]==userId[1]) {
+                  $("#報名按鈕"+course[0]).text("已報名");  
+                  $("#報名按鈕"+course[0]).css("background-color", "grey");                       
+                  $("#報名按鈕"+course[0]).css("border-style", "none");  
+                  setEnabled($("#報名按鈕"+course[0]), false);
+                }
+              }
+            }            
+          });
+        }); 
+      } else {
+        所有課程展開 = true;
+        $("#查看所有課程按鈕").text("查看所有課程");
+        $("#查看所有課程按鈕").css("background-color", "teal");
+        $("#查看所有課程按鈕").css("border-color", "teal");  
+        onChange(日曆選擇的日期);
+      }
+    }    
+  
+    function 找到特訂日期課程(selectedDate){
+      var 特訂日期課程=[];
+
+      courseData.forEach(function(course, index, array){
+            var courseDateArr = course[3].split(" ");
+            var courseDate = courseDateArr[0]; 
+
+            if (courseDate == selectedDate) {
+              特訂日期課程.push([course[0], course[1]]);              
+            }      
+        });
+      return 特訂日期課程;
+    }
+    
+    function 彙整系列課程(特訂日期課程){
+      var groupedCourses=[];
+      
+      特訂日期課程.forEach(function(courseChosen, index, array){
+        var courseNameChosenArray = courseChosen[1].split(" ");
+        //console.log(courseChosen, courseNameChosenArray);        
+        
+        // 尋找同名系列課程
+        courseData.forEach(function(course, courseIndex, courseArray){
+          courseNameArray = course[1].split(" ");    
+          //console.log(courseNameArray[0]);
+          
+          if (courseNameArray[0] == courseNameChosenArray[0]) {
+            groupedCourses.push(course);
+          }
+        });                
+      });
+      return groupedCourses;
+    }
+    
+    function onChange(selectedDate) {
+      //console.log(selectedDate, typeof selectedDate);
+      if ( (typeof selectedDate) == "object") {
+        var selectedDateStr = kendo.toString(this.value(), 'd');
+        var selectedDate = convertDate(selectedDateStr);
+        日曆選擇的日期 = selectedDate;
+        //console.log(selectedDate);
+      }
+      //console.log("Change :" + selectedDate);
+      
+      所有課程展開 = true;
+      $("#查看所有課程按鈕").text("查看所有課程") 
+      $("#查看所有課程按鈕").css("background-color", "teal");
+      $("#查看所有課程按鈕").css("border-color", "teal");        
+      
+      emptyDataSource();
+      
+      var groupedCourseData= 彙整系列課程(找到特訂日期課程(selectedDate));
+      
+      if (!系列課程展開) {
+        groupedCourseData = courseData;       
+      } 
+
+//XXX      courseData.forEach(function(course, index, array){
+      for (var index=0; index < groupedCourseData.length; index++){
+        var course= groupedCourseData[index];
+        var courseDateArr = course[3].split(" ");
+        var courseDate = courseDateArr[0]; 
+
+        if ( courseDate == selectedDate || 系列課程展開) {
+          //console.log("matched ", course);
+          var 課程圖片Url = (course[11]!=undefined)? course[11]: "picPlaceholder.png";          
+          dataSource.add({  
+            "課程編號": course[0],
+            "課程名稱": course[1],
+            "老師姓名": course[2],
+            "助教姓名": course[9],          
+            "上課時間": course[3],  
+            "燃燒熱量": course[4],
+            "課程人數": course[6],
+            "課程費用": course[5],
+            "其他說明": course[10],
+            "報名人數": course[7],
+            "繳費人數": course[8],     
+            "老師時間": course[2] + " | " + course[3],  
+            "課程圖片": 課程圖片Url,            
+            //"url": "2-views/course報名.html?courseId=" + "U0003",                  
+            //"ProductName": "一起來運動",
+            //"UnitPrice": 100
+          });   
+
+          courseMember.forEach(function(item, index, array){
+            if (course[0]==item[0]){
+
+              for (var i=1; i< item.length; i++) {
+                //console.log(item[i][3],userId[1]);
+                if (item[i][3]==userId[1]) {
+                  $("#報名按鈕"+course[0]).text("已報名");  
+                  $("#報名按鈕"+course[0]).css("background-color", "grey");                       
+                  $("#報名按鈕"+course[0]).css("border-style", "none");  
+                  setEnabled($("#報名按鈕"+course[0]), false);
+                }
+              }
+            }            
+          });
+        }
+//XXX        });
+      };       
+    }
+  
+    function onNavigate() {
+        console.log("Navigate");
+    }
+
+    
+    function 確定報名() {
+      console.log("確定報名 ", userId[1], 要報名的課程, userPhoneNumber);
+      // call API:20 =========================================================================
+      var request = new XMLHttpRequest();
+      var paramToSend = "?API=20&"+"UserName="+userName+"&CourseId="+要報名的課程+"&UserId="+userId[1]+"&PhoneNumber="+userPhoneNumber;
+      console.log(paramToSend); 
+      if (useLocalAPIs) {
+        request.open('GET', 'http://localhost:5000' + paramToSend, true);
+      } else {
+        request.open('GET', apiSite +paramToSend, true);
+      }      
+
+      request.onload = function() {
+        var responseMsg = this.response;
+
+        console.log(responseMsg);
+        
+        //responseMsg="API:20 會員報名成功"; //故意測試錯誤         
+        if (responseMsg != "API:20 會員報名成功") {
+          console.log(responseMsg);
+          alert(responseMsg);
+        } else {
+//          $("#確定報名按鈕").text("已報名");
+//          $("#確定報名按鈕").css("background-color", "grey");                       
+//          $("#確定報名按鈕").css("border-style", "none");           
+//          setEnabled($("#確定報名按鈕"), false);
+
+          //location.reload();
+          //reloadCourseNeeded = true;        
+          getCourseData(navDataSource); getCourseHistory(courseHistorySource); 
+          $("#報名表格").hide();
+          $("#團課日程Div").show();          
+          $("#報名按鈕"+想報名的courseId).text("已報名");  
+          $("#報名按鈕"+想報名的courseId).css("background-color", "grey");                       
+          $("#報名按鈕"+想報名的courseId).css("border-style", "none");  
+          setEnabled($("#報名按鈕"+想報名的courseId), false);          
+          
+        }
+      } 
+      request.send();      
+      
+    }
+    
+    function 讀取課表圖片() {
+      // call API:15 =========================================================================
+      var request = new XMLHttpRequest();
+      var paramToSend = "?API=15";
+      
+      console.log(paramToSend); 
+      if (useLocalAPIs) {
+        request.open('GET', 'http://localhost:5000' + paramToSend, true);
+      } else {
+        request.open('GET', apiSite +paramToSend, true);
+      }      
+
+      request.onload = function() {
+        var responseMsg = JSON.parse(this.response);
+        console.log("aaa",responseMsg);         
+        //$("#課表圖片").attr("src", responseMsg);
+        $("#課表圖片").attr("src", "https://i.imgur.com/1sot1z0.jpg");
+      } 
+      request.send();        
+    }
+    
+    
+    function 查看及收起課程表(){
+      console.log("查看及收起課程表");
+      if(課表狀態=="收起"){
+        課表狀態="查看";
+        $("#查看課程表header").text("收起課程表 ▲");
+        $("#課表圖片Div").show();
+      } else {
+         課表狀態="收起";
+        $("#查看課程表header").text("查看課程表 ▼");
+        $("#課表圖片Div").hide();       
+      }
+      
+    }
+    
+  </script>
+
+
+  <script>
+      //var app = new kendo.mobile.Application(document.body, { skin: "nova" });
+  </script>
+</body>
+</html>
