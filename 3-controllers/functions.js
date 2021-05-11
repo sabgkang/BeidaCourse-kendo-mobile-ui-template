@@ -286,9 +286,9 @@ function callAPI(param, loadingMessage) {
 async function checkUserIdExist() {
   //Call API:00 檢查 userId 有沒有重複參加 */
 
-  loadCourses = true;
-  getCourseData(navDataSource);
-  getCourseHistory(courseHistorySource);
+//  loadCourses = true;
+//  getCourseData(navDataSource);
+//  getCourseHistory(courseHistorySource);
   
 //  $.loading.start('檢查是否已填寫必要資料');
 //  paramToSend = "?API=14" + "&UserId=" + userId[1];
@@ -453,5 +453,92 @@ function 切換課程()
   } else {
     $("#已報名課程Div").hide();
     $("#參加過課程Div").show();    
+  }
+}
+
+function clearSearchText(){
+  $("#searchText").val("");
+  search已報名課程("");
+}
+
+function search已報名課程(searchFor){
+  
+  try {
+    var numOfItems = navDataSource.lastRange().end;
+    for (var i=0; i< numOfItems; i++){
+      var item = navDataSource.at(0);
+      navDataSource.remove(item);
+    }
+  }catch(e){
+    console.log(e);
+  }  
+  
+  var dataTemp =[];
+  inCourse.forEach(function(course, index, array){
+    courseData.forEach(function(item, ind, arr){
+      if (course==item[0]) {
+        
+        if (courseData[ind][0].includes(searchFor)
+         || courseData[ind][1].includes(searchFor)
+         || courseData[ind][2].includes(searchFor)
+         || courseData[ind][3].includes(searchFor)
+         || courseData[ind][5].includes(searchFor) || (searchFor=="免費" && courseData[ind][5]=='0')
+        ){
+          console.log("match" );
+        
+          //console.log(course, ind);
+          var 課程圖片Url = ( courseData[ind][11] !="")?courseData[ind][11]:"picPlaceholder.png";
+          var courseTitle = {
+            "課程編號": courseData[ind][0],              
+            "課程名稱": courseData[ind][1],
+            "老師時間": courseData[ind][2] + " | " + courseData[ind][3], 
+            "課程費用": courseData[ind][5],  
+            "課程圖片": 課程圖片Url,
+            "繳費狀況": "未繳費",
+            "繳費狀況顏色": "coral",              
+            "url": "2-views/courseDetail.html?courseId=" + courseData[ind][0],
+            "section": "A"             
+          };   
+
+          courseMember.forEach(function(course1, index1, array1){
+            //console.log(index1, courseData[ind][0]);
+            if (course1[0]==courseData[ind][0]) {
+              for (var i=1; i< course1.length;i++){
+                //console.log(course1[i][3]);
+                if (course1[i][3]== userId[1] && course1[i][1]=="已繳費") {
+                  courseTitle.繳費狀況 = "已繳費";
+                  courseTitle.繳費狀況顏色 = "darkslategray";
+                } else if (course1[i][3]== userId[1] && course1[i][1]=="免費") {
+                  courseTitle.繳費狀況 = "免費";
+                  courseTitle.繳費狀況顏色 = "darkslategray";                    
+                }
+              }
+            }
+          });           
+
+          navDataSource.add(courseTitle);
+          //dataTemp.push(courseTitle);
+        }
+      }
+    });
+  });
+}
+
+function scrollToBottom(){
+  const appScroller=app.view().scroller;
+  const scrollDistance= appScroller.height() - appScroller.scrollHeight(); 
+  if (scrollDistance < 0) {
+    appScroller.animatedScrollTo(0,scrollDistance);
+    setTimeout(function(){$("#toBottom").hide()}, 500);
+    show到底 = false;
+  }
+}
+
+function checkScroll(){
+  const appScroller= app.view().scroller;
+  const scrollDistance= appScroller.height() - appScroller.scrollHeight(); 
+  if (scrollDistance < 0) {
+    $("#toBottom").show();  
+    show到底 = true;
   }
 }

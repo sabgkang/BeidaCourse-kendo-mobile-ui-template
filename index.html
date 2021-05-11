@@ -88,11 +88,19 @@
     }    
   </style>
 
+<!--  <a class="k-icon k-i-search" style="position:absolute; top:50%; right:10px; z-index:1000";font-size:30px></a>-->
+ 
+  <div id="toBottom" style="display:none; position:absolute; top:50%; right:10px;z-index:1000;background-color:#33333333; color:darkslategray; text-align:center;width:45px;" onclick="scrollToBottom()">
+    <a style=" font-size:18px; font-weight:900; color:darkslategray" >最底</a>   
+    <br>
+    <a class="k-icon k-i-arrow-s"></a>   
+  </div>
+ 
   <div id="errorMessage" style="display: none; margin-top: 2em; color: red; font-weight: bold" align="center">
     <h3 class="NotoSansFont" style="margin-top: 2em; color: red; font-weight: bold">輸入參數發生錯誤，請洽管理員</h3>
   </div>
     
-  <div data-role="view" data-title="我的團課" style="font-family: 'Noto Sans TC'" id="courseDiv" data-layout="" data-show="nullForNow" data-init="initSearch">
+  <div data-role="view" data-title="Tempelate v0.001" style="font-family: 'Noto Sans TC'" id="courseDiv" data-layout="" data-show="nullForNow" data-init="initSearch">
     <header data-role="header">
       <div data-role="navbar" id="normal" class="km-accent">
 
@@ -100,8 +108,8 @@
         
         <span data-role="view-title"></span>
         
-<!--        <span class="km-view-subtitle"></span>-->
-<!--        <a data-align="left" data-role="button" data-click="showSearch" data-click-on="down" data-icon="search"></a>-->
+        <span class="km-view-subtitle"></span>
+        <a data-align="left" data-role="button" data-click="showSearch" data-click-on="down" data-icon="search"></a>
      
       </div>
 <!--
@@ -129,7 +137,8 @@
     <div id="已報名課程Div">       
       <div style="height: 15px"></div>
 <!--      <span class="報名課程title">報名新課程</span>-->
-      <a class="reply km-primary km-button-left" href="#2-views/團課日程.html" style="font-size: 18px; color: white; margin-left: 10px; " data-role="button" onclick="">報名課程</a>
+<!--      <a class="reply km-primary km-button-left" href="#2-views/團課日程.html" style="font-size: 18px; color: white; margin-left: 10px; " data-role="button" onclick="">報名課程</a>-->
+      <a class="reply km-primary km-button-left" href="#2-views/團課.html" style="font-size: 18px; color: white; margin-left: 10px; " data-role="button" onclick="">報名課程</a>
       <div style="height: 20px"></div>
 
       <br><br>
@@ -138,7 +147,29 @@
       <div style="height: 15px"></div>
       <span id="報名課程title" class="報名課程title">已報名課程</span>
       <div style="height: 15px"></div>
-
+      
+      <div id="searchBar">
+        <a class="k-icon k-i-search" style="font-size:20px; color:gray; margin-left:20px" ></a>    
+          
+        <input id="searchText" style="font-size:18px; width:95%; height:50px; margin-left:-32px; border-style:none; background-color:antiquewhite; padding:5px;padding-left:35px; border-radius:10px" type="text" placeholder="搜尋字串" onchange="search已報名課程(this.value)" />
+        
+        <a id="serachClear" class="k-icon k-i-close" style="font-size:20px; color:gray; margin-left:-30px; margin-top:-4px" onclick="clearSearchText()"></a>
+        
+        <script>
+          var input = document.getElementById('searchText');
+          input.onkeydown = function() {
+              var key = event.keyCode || event.charCode;
+              if( key == 8 ){
+                //console.log("backspace pressed", input.value);
+                if (input.value.length==1 /* length=1is tricky */) {
+                  //console.log("empty");
+                  search已報名課程("");
+                }
+              }
+          };          
+        </script>
+      </div>
+      
       <ul data-role="listview" data-source="navDataSource" data-pull-to-refresh="true" data-template="nav-template" data-header-template="header-template" class="main-menu">
 
         <script type="text/x-kendo-template" id="header-template">
@@ -158,7 +189,7 @@
         </script>
 
       </ul>
-    </div>
+     </div>
 
      <div id="參加過課程Div">
       <div style="height: 15px"></div>
@@ -315,17 +346,21 @@
     var 系列課程展開 = false;
     var 日曆選擇的日期;
     var 想報名的courseId;
+    var show到底 = false;
       
     notInCourse=[];
     inCourse=[];
-    myHistory=[];      
+    myHistory=[];     
+    
+
     
     loadCourses = false; //declared in data-process.js
     $("#參加過課程Div").hide();
     
     // checkInputParam() 和 checkUserIdExist() 都是在 functions.js 定義
 //    if (checkInputParam()) checkUserIdExist();
-    checkUserIdExist();
+//    checkUserIdExist();
+    loadCourses = true;
         
   </script>
 

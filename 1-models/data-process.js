@@ -64,6 +64,7 @@ navDataSource = new kendo.data.DataSource({
   //group: { field: "section" }
 })
 
+
 courseHistorySource = new kendo.data.DataSource({
   transport: {
     read: function (data) { getCourseHistory(courseHistorySource); }
@@ -93,6 +94,8 @@ courseHistorySource = new kendo.data.DataSource({
 
 searchDataSource = navDataSource;
 
+var indexForTest=0;
+var dataTemp=[];
 function getCourseData(data) {
   console.log("prepare data for CourseListView");
   
@@ -105,15 +108,17 @@ function getCourseData(data) {
 //    if (allDataReady==4) {
 //      //console.log(inCourse, courseData);
 //      clearInterval(checkDataReady);
-      //console.log("Set up data for listview")
-      var dataTemp =[];
-      inCourse.forEach(function(course, index, array){
+      console.log("Set up data for listview")
+      //var dataTemp =[];
+//      inCourse.forEach(function(course, index, array){
+      for (var i=0; i < inCourse.length; i++){
         courseData.forEach(function(item, ind, arr){
-          if (course==item[0]) {
+//          if (course==item[0]) {
+          if (inCourse[i]==item[0]) {
             //console.log(course, ind);
             var 課程圖片Url = ( courseData[ind][11] !="")?courseData[ind][11]:"picPlaceholder.png";
             var courseTitle = {
-              "課程編號": courseData[ind][0],              
+              "課程編號": courseData[ind][0]+"-"+indexForTest++,              
               "課程名稱": courseData[ind][1],
               "老師時間": courseData[ind][2] + " | " + courseData[ind][3], 
               "課程費用": courseData[ind][5],  
@@ -145,10 +150,10 @@ function getCourseData(data) {
 
           }
         });
-      });
+      };
    
       console.log(dataTemp, length);
-      data.success(dataTemp); 
+      data.success(dataTemp.slice().reverse()); //加上 slice() 才不會改變 dataTemp
       
       if (dataTemp.length==0) {
         $("#報名課程title").text("尚無報名課程");
@@ -158,7 +163,7 @@ function getCourseData(data) {
 //    }
 //    
 //  }, 100);
-  
+  //checkScroll();
 }
 
 function getCourseHistory(data) {
@@ -203,12 +208,13 @@ function getCourseHistory(data) {
 //    }
 //    
 //  }, 100);
- 
+  setTimeout(checkScroll, 500);
 }
 
 
 function nullForNow(e) {
-  console.log("nullForNow");
+  console.log("Back to Main");
+  if (show到底) $("#toBottom").show();
   //currentExample = nullForNow;
 }
 
@@ -250,15 +256,16 @@ function initSearch(e) {
 var desktop = !kendo.support.mobileOS;
 
 function showSearch() {
-  $("#normal").addClass("navbar-hidden");
-  $("#search").removeClass("navbar-hidden");
-  if (desktop) {
-    setTimeout(function () {
-      $("#demos-search").focus();
-    });
-  } else {
-    $("#demos-search").focus();
-  }
+//  $("#normal").addClass("navbar-hidden");
+//  $("#search").removeClass("navbar-hidden");
+//  if (desktop) {
+//    setTimeout(function () {
+//      $("#demos-search").focus();
+//    });
+//  } else {
+//    $("#demos-search").focus();
+//  }
+  console.log("search");
 }
 
 function hideSearch() {

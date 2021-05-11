@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Kendo UI Snippet</title>
+
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2021.1.330/styles/kendo.default-v2.min.css"/>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2021.1.330/js/kendo.all.min.js"></script>
+</head>
+<body>
+  
+<div data-role="view">
+  <ul data-role="listview" data-source="foo" data-pull-to-refresh="true" data-append-on-refresh="true" data-template="foo-template">
+  </ul>
+</div>
+
+<script type="text/x-kendo-template" id="foo-template">
+    #: name # - #: modified #
+</script>
+
+<script>
+var i = 0;
+var data=[];
+// datasource below is customized for demo purposes.
+var foo = new kendo.data.DataSource({
+  transport: {
+    read: function(options) {
+      var max = i + 5;
+      data = [];
+      for (; i < max; i ++) {
+        data.unshift({ name: "record" + i, modified: +new Date() });
+      }
+      // illustration purposes only
+      setTimeout(function() {
+          options.success(data);
+      }, 100);
+
+    }
+  }
+});
+
+new kendo.mobile.Application();
+</script>
+</body>
+</html>
