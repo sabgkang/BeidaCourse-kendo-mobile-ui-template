@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>html { font-size: 14px; font-family: Arial, Helvetica, sans-serif; }</style>
+  <title></title>
+  <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.common.min.css" />
+  <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.default.min.css" />
+  <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.mobile.all.min.css" />
+
+  <script src="https://kendo.cdn.telerik.com/2020.1.114/js/jquery.min.js"></script>
+  <script src="https://kendo.cdn.telerik.com/2020.1.114/js/kendo.all.min.js"></script>
+    
+</head>
+<body>
+
+  <div data-role="view" data-init="initData"  data-title="聊天" style="text-align: center;font-family: 'Noto Sans TC'" data-use-native-scrolling="true">
+   
+    <div id="聊天Div" onclick="console.log('bbb')">         
+      <div>
+        <ul id="messageTable"></ul>        
+      </div> 
+    </div>
+
+  </div>
+  
+  
+  <div data-role="view">
+      <a data-role="button"  data-click=""></a>
+  </div>
+     
+  <div data-role="modalview" id="modalview-img" style="width: 90%;">
+<!--
+      <header data-role="header" >
+          <div data-role="navbar" style="height:30px; background:#F5404C;">
+              <span style="font-size:18px;float:left; margin-top:-7px; margin-left:45%" id="aaa">圖片</span>
+              <a data-click="closeModalViewLogin" data-role="button" data-align="right">Close</a>
+          </div>
+      </header>
+-->
+     <div style="background:lightgray;" onclick="closeImg()">
+       <a class="k-icon k-i-close" style="font-size:20px; float:right; margin:4px"></a> 
+       <img src="../%E7%B4%A2%E5%8F%96%E8%AA%B2%E7%A8%8B%E8%A1%A8.png" style="width: 100%; height:100%" />
+    </div>
+
+    <script>
+      //$("#modalview-img").kendoMobileModalView("open")
+      function closeImg(){
+        $("#modalview-img").kendoMobileModalView("close")
+      }
+    </script>
+  </div>
+    
+  <script type="text/x-kendo-template" id="chattemplate">
+      <a class="reply km-primary km-button-right"
+        style="color: white" data-role="button"
+        onclick="messageBtn('#: message編號 #')" 
+        id = "按鈕#: message編號 #"
+      >按鈕</a>
+
+      <div style="text-align:left;">
+      <img src="#: message圖片 #" width="70" height="70" style="float:left;margin-right:10px"
+        onclick="messageBtn('#: message圖片 #')"
+      />          
+      <p style="font-size:12px; color: gray; margin-top:-4px"> #: message編號 # </p>
+      <p style="font-size:16px; color: darkslategray;  margin-top:-4px font-weight:bold">#: message內容 # </p>
+      <p style="font-size:12px; color: gray;  margin-top:-4px">#: 發送者及時間 # </p>
+      </div>
+
+  </script>
+
+  <script>
+    $("#toBottom").hide();
+    
+    var dataSource;
+    console.log("enter 聊天.html");
+        
+    function initData(e) {
+      console.log("initData");
+
+      //initDataSource();
+      dataSource = new kendo.data.DataSource({    
+          data: [],
+          schema: {
+              total: function () { 
+                return 77; }
+          },            
+          serverPaging: true,
+          pageSize: 40
+      });   
+      
+      $("#messageTable").kendoMobileListView({
+          dataSource: dataSource,
+          pullToRefresh: false,            
+          template: $("#chattemplate").text(),        
+      });
+
+      emptyDataSource()
+      //查看所有課程()
+        courseData.forEach(function(course, index, array){
+          var message圖片Url = "";
+          dataSource.add({  
+            "message編號": course[0],
+            "message內容": course[1],
+//            "老師姓名": course[2],
+//            "助教姓名": course[9],          
+//            "上課時間": course[3],  
+//            "燃燒熱量": course[4],
+//            "課程人數": course[6],
+//            "課程費用": course[5],
+//            "其他說明": course[10],
+//            "報名人數": course[7],
+//            "繳費人數": course[8],     
+            "發送者及時間": course[2] + " | " + course[3],   
+            "message圖片": message圖片Url,
+            //"url": "2-views/course報名.html?courseId=" + "U0003",                  
+            //"ProductName": "一起來運動",
+            //"UnitPrice": 100
+          });        
+
+      });   
+    }
+        
+    function messageBtn(messageId){
+      console.log("message ", messageId);
+      $("#modalview-img").kendoMobileModalView("open")
+    }  
+  
+    function emptyDataSource(){
+      try {
+        var numToDel = dataSource.lastRange().end;
+        for (var i=0; i< numToDel; i++){
+          var toDel = dataSource.at(0);
+          dataSource.remove(toDel);
+        }
+      }catch(e){
+        console.log(e);
+      }
+    }
+    
+  </script>
+
+
+  <script>
+      //var app = new kendo.mobile.Application(document.body, { skin: "nova" });
+  </script>
+</body>
+</html>
