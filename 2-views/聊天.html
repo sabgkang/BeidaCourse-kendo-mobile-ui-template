@@ -13,6 +13,9 @@
 </head>
 <body>
 
+  <style>
+
+  </style>
   <div data-role="view" data-init="initData"  data-title="聊天" style="text-align: center;font-family: 'Noto Sans TC'" data-use-native-scrolling="true">
    
     <div id="聊天Div" onclick="console.log('bbb')">         
@@ -39,7 +42,7 @@
 -->
      <div style="background:lightgray;" onclick="closeImg()">
        <a class="k-icon k-i-close" style="font-size:20px; float:right; margin:4px"></a> 
-       <img src="../%E7%B4%A2%E5%8F%96%E8%AA%B2%E7%A8%8B%E8%A1%A8.png" style="width: 100%; height:100%" />
+       <img src="../%E7%B4%A2%E5%8F%96%E8%AA%B2%E7%A8%8B%E8%A1%A8.png" style="width: 100%; height:100%;" />
     </div>
 
     <script>
@@ -50,8 +53,8 @@
     </script>
   </div>
     
+<!--
   <script type="text/x-kendo-template" id="chattemplate" >
-
     <a class="reply km-primary km-button-right"
       style="color: white" data-role="button"
       onclick="messageBtn('#: message編號 #')" 
@@ -68,7 +71,29 @@
     </div>
 
   </script>
+-->
 
+  <script type="text/x-kendo-template" id="chattemplate" >
+    <!-- <a class="reply km-primary km-button-right"
+      style="color: white" data-role="button"
+      onclick="messageBtn('#:message編號#')" 
+      id = "按鈕#: message編號 #"
+    >按鈕</a>
+
+    <div style="text-align:left;">
+    <img src="#: message圖片 #" width="70" height="70" style="float:left;margin-right:10px;border-radius:50%"
+      onclick="messageBtn('#: message圖片 #')"
+    />          
+    <p style="font-size:12px; color: gray; margin-top:-4px" id ='#: message編號 #'> #: message編號 # </p> -->
+    
+    <p style="font-size:12px; color: gray; float: left; margin-top:-15px" id ='#: message編號 #'> #: message編號 # </p>
+    <p style="font-size:16px; color: darkslategray; background-color:beige; padding:5px; width:80%; border-radius:5px" id ='msg_#:message編號#'>#: message內容 # </p>
+    
+    </div>
+
+  </script>
+  
+  
   <script>
     $("#toBottom").hide();
     
@@ -101,18 +126,22 @@
       const messages = [
         { "message編號": '0001',
           "message內容": 'Hello',
-          "發送者及時間":  '2021/05/21 16:31',   
+          "發送者":  'A',   
           "message圖片":  '../btn.png',
         },
         { "message編號": '0002',
-          "message內容": 'What can I help you?',
-          "發送者及時間":  '2021/05/21 16:53',   
+          "message內容": 'What can I help you? hdjkhdksa khjdaksljdlajsda kjdsalkdjladja kjldsldjalj',
+          "發送者":  'B',   
           "message圖片":  '../dog.png',
         },        
       ];      
       
       for (var i=0; i< messages.length; i++){
         dataSource.add(messages[i]);
+        if (messages[i].發送者 == 'B') {
+          console.log(messages[i]);
+          $()
+        }
       }
         
 //        var message圖片Url = "";
