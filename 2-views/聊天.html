@@ -50,21 +50,22 @@
     </script>
   </div>
     
-  <script type="text/x-kendo-template" id="chattemplate">
-      <a class="reply km-primary km-button-right"
-        style="color: white" data-role="button"
-        onclick="messageBtn('#: message編號 #')" 
-        id = "按鈕#: message編號 #"
-      >按鈕</a>
+  <script type="text/x-kendo-template" id="chattemplate" >
 
-      <div style="text-align:left;">
-      <img src="#: message圖片 #" width="70" height="70" style="float:left;margin-right:10px"
-        onclick="messageBtn('#: message圖片 #')"
-      />          
-      <p style="font-size:12px; color: gray; margin-top:-4px"> #: message編號 # </p>
-      <p style="font-size:16px; color: darkslategray;  margin-top:-4px font-weight:bold">#: message內容 # </p>
-      <p style="font-size:12px; color: gray;  margin-top:-4px">#: 發送者及時間 # </p>
-      </div>
+    <a class="reply km-primary km-button-right"
+      style="color: white" data-role="button"
+      onclick="messageBtn('#: message編號 #')" 
+      id = "按鈕#: message編號 #"
+    >按鈕</a>
+
+    <div style="text-align:left;">
+    <img src="#: message圖片 #" width="70" height="70" style="float:left;margin-right:10px;border-radius:50%"
+      onclick="messageBtn('#: message圖片 #')"
+    />          
+    <p style="font-size:12px; color: gray; margin-top:-4px"> #: message編號 # </p>
+    <p style="font-size:16px; color: darkslategray;  margin-top:-4px font-weight:bold">#: message內容 # </p>
+    <p style="font-size:12px; color: gray;  margin-top:-4px">#: 發送者及時間 # </p>
+    </div>
 
   </script>
 
@@ -94,13 +95,33 @@
           template: $("#chattemplate").text(),        
       });
 
-      emptyDataSource()
-      //查看所有課程()
-        courseData.forEach(function(course, index, array){
-          var message圖片Url = "";
-          dataSource.add({  
-            "message編號": course[0],
-            "message內容": course[1],
+      //emptyDataSource()
+
+
+      const messages = [
+        { "message編號": '0001',
+          "message內容": 'Hello',
+          "發送者及時間":  '2021/05/21 16:31',   
+          "message圖片":  '../btn.png',
+        },
+        { "message編號": '0002',
+          "message內容": 'What can I help you?',
+          "發送者及時間":  '2021/05/21 16:53',   
+          "message圖片":  '../dog.png',
+        },        
+      ];      
+      
+      for (var i=0; i< messages.length; i++){
+        dataSource.add(messages[i]);
+      }
+        
+//        var message圖片Url = "";
+//        dataSource.add({
+//      courseData.forEach(function(course, index, array){
+//        var message圖片Url = "";
+//        dataSource.add({  
+//          "message編號": course[0],
+//          "message內容": course[1],
 //            "老師姓名": course[2],
 //            "助教姓名": course[9],          
 //            "上課時間": course[3],  
@@ -110,14 +131,14 @@
 //            "其他說明": course[10],
 //            "報名人數": course[7],
 //            "繳費人數": course[8],     
-            "發送者及時間": course[2] + " | " + course[3],   
-            "message圖片": message圖片Url,
-            //"url": "2-views/course報名.html?courseId=" + "U0003",                  
-            //"ProductName": "一起來運動",
-            //"UnitPrice": 100
-          });        
-
-      });   
+//          "發送者及時間": course[2] + " | " + course[3],   
+//          "message圖片": message圖片Url,
+//          //"url": "2-views/course報名.html?courseId=" + "U0003",                  
+//          //"ProductName": "一起來運動",
+//          //"UnitPrice": 100
+//        });        
+//
+//      });   
     }
         
     function messageBtn(messageId){
