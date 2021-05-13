@@ -85,14 +85,8 @@
   </style>
 
 <!--  <a class="k-icon k-i-search" style="position:absolute; top:50%; right:10px; z-index:1000";font-size:30px></a>-->
- 
-  <div id="toBottomChat" style="display:none; position:absolute; top:50%; right:10px;z-index:1000;background-color:#33333333; color:darkslategray; text-align:center;width:45px;" onclick="scrollToBottom('#toBottomChat')">
-    <a style=" font-size:18px; font-weight:900; color:darkslategray" >最底</a>   
-    <br>
-    <a class="k-icon k-i-arrow-s"></a>   
-  </div>
     
-  <div data-role="view" data-title="聊天" style="font-family: 'Noto Sans TC'; height:90%" id="courseDivChat" data-layout="" data-show="chatShow" data-init="initChatListView">
+  <div data-role="view" data-title="聊天" style="font-family: 'Noto Sans TC'; height:85%" id="chatDiv" data-layout="" data-show="chatShow" data-init="initChatListView">
     <header data-role="header">
       <div data-role="navbar" id="normalChat" class="km-accent">
 
@@ -114,7 +108,7 @@
         
         <script>
           var inputChat = document.getElementById('searchTextChat');
-          input.onkeydown = function() {
+          inputChat.onkeydown = function() {
               var key = event.keyCode || event.charCode;
               if( key == 8 ){
                 //console.log("backspace pressed", input.value);
@@ -127,22 +121,28 @@
         </script>
       </div>
       
-      <ul data-role="listview" data-source="navDataSource" data-pull-to-refresh="true" data-template="nav-template-chat" data-header-template="header-template-chat" class="main-menu">
+    
+      <ul data-role="listview" data-source="chatDataSource" data-pull-to-refresh="true" data-template="chattemplate"  class="main-menu">
 
-        <script type="text/x-kendo-template" id="header-template-chat">
-          <span class="km-icon km-#: value #"></span> #: value #
-          </script>
+        <script type="text/x-kendo-template" id="chattemplate" >
+          <!-- <a class="reply km-primary km-button-right"
+            style="color: white" data-role="button"
+            onclick="messageBtn('#:message編號#')" 
+            id = "按鈕#: message編號 #"
+          >按鈕</a>
 
-        <script type="text/x-kendo-template" id="nav-template-chat">
-          <a href="#: url #" class="課程名稱">
-            <p style="font-size:16px; color: #: 繳費狀況顏色 #; border-width:2px; border-radius:5px;border-color:#: 繳費狀況顏色 # ; border-style:solid; float:right; margin-right:30px;padding-left:5px;padding-right:5px">#: 繳費狀況 # </p>
-            
-            <img src="#: 課程圖片 #" width="70" height="70" style="float:left;margin-right:10px"/>          
-            <p style="font-size:12px; color: gray; margin-top:-8px"> #: 課程編號 # </p>
-            <p style="font-size:16px; color: darkslategray; margin-top:-10px; font-weight:bold">#: 課程名稱 # </p>
-            <p style="font-size:12px; color: gray; margin-top:-10px">#: 老師時間 # </p>
-            <p style="font-size:12px; color: gray; margin-top:-10px;margin-bottom:-25px">#: 課程費用 # </p>            
-          </a>
+          <div style="text-align:left;">
+          <img src="#: message圖片 #" width="70" height="70" style="float:left;margin-right:10px;border-radius:50%"
+            onclick="messageBtn('#: message圖片 #')"
+          />          
+          <p style="font-size:12px; color: gray; margin-top:-4px" id ='#: message編號 #'> #: message編號 # </p> -->
+
+          <p style="font-size:16px; color: darkslategray; text-align:left; background-color:beige; padding:5px; width:80%; border-radius:5px;" id ='msgContent#:message編號#'>#: message內容 #</p>
+
+          <p style="font-size:12px; color: gray; float: left; margin-top:-8px;" id ='msgTime#: message編號#'>#: message時間 #</p>
+
+          </div>
+
         </script>
 
       </ul>
@@ -152,7 +152,173 @@
 <!--  <h2 style="position: absolute; bottom: 50; left: 0" id="deleteMeChat">aaa</h2>-->
 
   <script>
+      console.log("aaa");
+    
+      chatDataSource = new kendo.data.DataSource({
+        // 使用 data 的方法一
+//          data: [
+//            { "message編號": '0001',
+//              "messageType": 'text',
+//              "message內容": 'Hello',
+//              "發送者":  'notMe',   
+//              "message時間": '2021/05/13 10:59',
+//              "message圖片":  '../btn.png',
+//            },
+//            { "message編號": '0002',
+//              "messageType": 'img',         
+//              "message內容": 'What can I help you? hdjkhdksa khjdaksljdlajsda kjdsalkdjladja kjldsldjalj',
+//              "發送者":  'Me',   
+//              "message時間": '2021/05/13 11:02',
+//              "message圖片":  '../dog.png',
+//            },               
+//            
+//          ],
+
+        // 使用 data 的方法二, transport
+        transport: {
+          read: function (data) { getChatData(chatDataSource);  }
+        },
+      //  sort: {
+      //    field: "課程名稱",
+      //    dir: "asc"
+      //  },
+        requestStart: function () {
+          kendo.ui.progress($("#loading"), true);
+        },
+        requestEnd: function () {
+          kendo.ui.progress($("#loading"), false);
+        },
+
+        schema: {
+          total: function () {
+//            console.log("scheme total");
+//            取得經緯度();    
+            return 77;
+          }
+        },
+        serverPaging: true,
+        pageSize: 40,
+        //group: { field: "section" }
+      });
+        
+    function getChatData(data){
+      const messages = [
+        { "message編號": '0001',
+          "messageType": 'text',
+          "message內容": 'Hello',
+          "發送者":  'notMe',   
+          "message時間": '2021/05/13 10:59',
+          "message圖片":  '../btn.png',
+        },
+        { "message編號": '0002',
+          "messageType": 'img',         
+          "message內容": 'What can I help you? hdjkhdksa khjdaksljdlajsda kjdsalkdjladja kjldsldjalj',
+          "發送者":  'Me',   
+          "message時間": '2021/05/13 11:02',
+          "message圖片":  '../dog.png',
+        }, 
+        { "message編號": '0003',
+          "messageType": 'text',
+          "message內容": 'I need to buy a car.',
+          "發送者":  'notMe',   
+          "message時間": '2021/05/13 11:28',
+          "message圖片":  '../btn.png',
+        },
+        { "message編號": '0004',
+          "messageType": 'img',         
+          "message內容": 'What type of car do you wnat?',
+          "發送者":  'Me',   
+          "message時間": '2021/05/13 11:31',
+          "message圖片":  '../dog.png',
+        },   
+        { "message編號": '0005',
+          "messageType": 'text',
+          "message內容": 'Hello',
+          "發送者":  'notMe',   
+          "message時間": '2021/05/13 10:59',
+          "message圖片":  '../btn.png',
+        },
+        { "message編號": '0006',
+          "messageType": 'img',         
+          "message內容": 'What can I help you? hdjkhdksa khjdaksljdlajsda kjdsalkdjladja kjldsldjalj',
+          "發送者":  'Me',   
+          "message時間": '2021/05/13 11:02',
+          "message圖片":  '../dog.png',
+        }, 
+        { "message編號": '0007',
+          "messageType": 'text',
+          "message內容": 'I need to buy a car.',
+          "發送者":  'notMe',   
+          "message時間": '2021/05/13 11:28',
+          "message圖片":  '../btn.png',
+        },
+        { "message編號": '0008',
+          "messageType": 'img',         
+          "message內容": 'What type of car do you wnat?',
+          "發送者":  'Me',   
+          "message時間": '2021/05/13 11:31',
+          "message圖片":  '../dog.png',
+        },
+        { "message編號": '0009',
+          "messageType": 'text',
+          "message內容": 'Hello',
+          "發送者":  'notMe',   
+          "message時間": '2021/05/13 10:59',
+          "message圖片":  '../btn.png',
+        },
+        { "message編號": '0010',
+          "messageType": 'img',         
+          "message內容": 'What can I help you? hdjkhdksa khjdaksljdlajsda kjdsalkdjladja kjldsldjalj',
+          "發送者":  'Me',   
+          "message時間": '2021/05/13 11:02',
+          "message圖片":  '../dog.png',
+        }, 
+        { "message編號": '0011',
+          "messageType": 'text',
+          "message內容": 'I need to buy a car.',
+          "發送者":  'notMe',   
+          "message時間": '2021/05/13 11:28',
+          "message圖片":  '../btn.png',
+        },
+        { "message編號": '0012',
+          "messageType": 'img',         
+          "message內容": 'What type of car do you wnat?',
+          "發送者":  'Me',   
+          "message時間": '2021/05/13 11:31',
+          "message圖片":  '../dog.png',
+        },        
+      ];     
+    
+      //console.log(messages);
+
+      data.success(messages);
+      
+      for (var i=0; i< messages.length; i++){
+        const msgLength = messages[i].message內容.length;
+        //console.log(msgLength);
+
+        //data.add(messages[i]);
+
+        if (messages[i].發送者 == 'Me') {
+          const msgId = "#msgContent"+messages[i].message編號;
+          const msgTimeId = "#msgTime"+messages[i].message編號;
+
+
+          $(msgId).css("text-align", "right");
+          $(msgId).css("margin-left","20%");
+          $(msgId).css("background", "aqua");
+          $(msgTimeId).css("float","right");
+
+        }
+      }      
+    }
+    
+    function chatShow(){
       $("#ChatEnter").show();
+      //console.log(chatDataSource.data());
+      //getChatData(chatDataSource);
+      
+    }
   </script>
 
 </body>

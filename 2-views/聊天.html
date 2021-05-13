@@ -16,8 +16,6 @@
   <style>
   </style>
   
- 
-  
   <div data-role="view" data-init="initData"  data-title="聊天" style="text-align: center;font-family: 'Noto Sans TC'" data-use-native-scrolling="true">
    
     <div id="聊天Div" onclick="console.log('bbb')">         
@@ -53,26 +51,6 @@
     </script>
   </div>
     
-<!--
-  <script type="text/x-kendo-template" id="chattemplate" >
-    <a class="reply km-primary km-button-right"
-      style="color: white" data-role="button"
-      onclick="messageBtn('#: message編號 #')" 
-      id = "按鈕#: message編號 #"
-    >按鈕</a>
-
-    <div style="text-align:left;">
-    <img src="#: message圖片 #" width="70" height="70" style="float:left;margin-right:10px;border-radius:50%"
-      onclick="messageBtn('#: message圖片 #')"
-    />          
-    <p style="font-size:12px; color: gray; margin-top:-4px"> #: message編號 # </p>
-    <p style="font-size:16px; color: darkslategray;  margin-top:-4px font-weight:bold">#: message內容 # </p>
-    <p style="font-size:12px; color: gray;  margin-top:-4px">#: 發送者及時間 # </p>
-    </div>
-
-  </script>
--->
-
 
   <script type="text/x-kendo-template" id="chattemplate" >
     <!-- <a class="reply km-primary km-button-right"
@@ -97,7 +75,7 @@
   
   
   <script>
-    $("#toBottom").hide();
+    //$("#toBottomChat").hide();
     
     var dataSource;
     console.log("enter 聊天.html");

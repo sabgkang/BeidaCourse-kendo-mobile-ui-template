@@ -166,11 +166,7 @@
         </script>
       </div>
       
-      <ul data-role="listview" data-source="navDataSource" data-pull-to-refresh="true" data-template="nav-template" data-header-template="header-template" class="main-menu">
-
-        <script type="text/x-kendo-template" id="header-template">
-          <span class="km-icon km-#: value #"></span> #: value #
-          </script>
+      <ul data-role="listview" data-source="navDataSource" data-pull-to-refresh="true" data-template="nav-template" data-header-template="" class="main-menu">
 
         <script type="text/x-kendo-template" id="nav-template">
           <a href="#: url #" class="課程名稱">
@@ -215,6 +211,10 @@
   
 <!--  <h2 style="position:absolute; bottom: 0; display:none" id="deleteMe"></h2>-->
   <div id="ChatEnter" style="position:absolute; bottom: 10px; width:100%;">
+   <hr>
+     <img src="./dog.png" style="float:left; width:50px" onclick="console.log('select photo')" />
+    <textarea rows="3" placeholder="Type here ..." style="font-size:15px; padding:10px;border-width:0px;margin-left:0px; width:73%;background:aqua;border-radius:10px; resize:none"></textarea>
+    <span style="float:right;margin-right:20px" onclick="console.log('send message')">Send</span>
   </div>
   
   <div id="forms" data-role="view" data-title="個人資料" data-init="initForm" data-use-native-scrolling="true" style="font-family: 'Noto Sans TC'">

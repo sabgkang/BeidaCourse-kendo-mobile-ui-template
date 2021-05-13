@@ -251,13 +251,13 @@ function removeView(e) {
 
 function initMainListView(e){
   console.log("initMainListView");
-  var scroller = e.view.scroller;
-  scroller.bind("scroll", function(e) {
-    /* The result can be observed in the DevTools(F12) console of the browser. */
-    console.log("top***:",e.scrollTop);
-    /* The result can be observed in the DevTools(F12) console of the browser. */
-    console.log("left***:",e.scrollLeft);
-  });  
+//  var scroller = e.view.scroller;
+//  scroller.bind("scroll", function(e) {
+//    /* The result can be observed in the DevTools(F12) console of the browser. */
+//    console.log("top***:",e.scrollTop);
+//    /* The result can be observed in the DevTools(F12) console of the browser. */
+//    console.log("left***:",e.scrollLeft);
+//  });  
 }
 
 function initChatListView(e) {
