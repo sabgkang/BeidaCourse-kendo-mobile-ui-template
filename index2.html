@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+  <meta name="msapplication-tap-highlight" content="no" />
+
+  <!--  using Noto Sans TC is added by Paul Kang-->
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+
+  <link href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.common-nova.min.css" rel="stylesheet" />
+  <link href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.nova.min.css" rel="stylesheet" />
+  <link href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.mobile.nova.min.css" rel="stylesheet" />   
+
+  <link href="css/courseStyle.css" rel="stylesheet" />
+     
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script src="https://kendo.cdn.telerik.com/2020.1.114/js/kendo.all.min.js"></script>
+  <script src="https://kendo.cdn.telerik.com/2020.1.114/js/kendo.timezones.min.js"></script>
+  
+  <link rel="stylesheet" href="css/loading.css" />
+  <script src="js/loading.js"></script>    
+</head>
+
+<body id="bodyChat">
+  <!-- Google Tag Manager -->
+  <!-- remarked by Paul Kang
+    <noscript>
+      <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-6X92" height="0" width="0" style="display: none; visibility: hidden"></iframe>
+    </noscript>
+    <script>(function(w, d, s, l, i) { w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' }); var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f); })(window, document, 'script', 'dataLayer', 'GTM-6X92');</script>
+  -->
+  <!-- End Google Tag Manager -->
+
+  <!-- 
+    若設  data-use-native-scrolling="true"，則 非 mobile mode 可以捲動，但 mobile mode 顯示有問題。
+    若沒設 data-use-native-scrolling="true"，則 非 mobile mode 無法捲動，但 mobile mode 正常可捲動。
+    -->
+
+  <style>
+  
+    .km-on-ios  .km-list > li { /*ListView 裡的 item*/
+/*        background-color: rgb(250,250,250);*/
+/*        background-color: white;*/
+/*        border-radius:10px;*/
+        margin: -0px;
+    }
+
+    
+    .km-on-ios .km-header .km-navbar
+    /* for data-title */
+    {
+      background-color: coralbl;
+      /* deeppink; */
+      font-size: 18px;
+    }
+      
+    .km-on-ios .km-header .km-widget,
+    .km-on-ios .km-header .km-view-title {
+      color: white;
+    }
+
+    .NotoSansFont {
+      font-family: 'Noto Sans TC'; 
+    }
+    
+    .報名課程title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-left: 15px;
+
+    }
+
+    .課程名稱 {
+      font-size: 18px;
+      margin-left: 15px;
+
+    }
+    
+    #calendar,
+    #calendar .k-calendar-view,
+    #calendar .k-content {
+        width: 100%;
+    }    
+  </style>
+
+<!--  <a class="k-icon k-i-search" style="position:absolute; top:50%; right:10px; z-index:1000";font-size:30px></a>-->
+ 
+  <div id="toBottomChat" style="display:none; position:absolute; top:50%; right:10px;z-index:1000;background-color:#33333333; color:darkslategray; text-align:center;width:45px;" onclick="scrollToBottom('#toBottomChat')">
+    <a style=" font-size:18px; font-weight:900; color:darkslategray" >最底</a>   
+    <br>
+    <a class="k-icon k-i-arrow-s"></a>   
+  </div>
+    
+  <div data-role="view" data-title="聊天" style="font-family: 'Noto Sans TC'; height:90%" id="courseDivChat" data-layout="" data-show="chatShow" data-init="initChatListView">
+    <header data-role="header">
+      <div data-role="navbar" id="normalChat" class="km-accent">
+
+        <a data-align="left" data-role="button" href="" data-rel="" data-icon="back"></a>
+        
+        <span data-role="view-title"></span>
+             
+      </div>
+    </header>
+
+    <div id="已報名課程DivChat">       
+    
+      <div id="searchBarChat" style="margin-top:10px">
+        <a class="k-icon k-i-search" style="font-size:20px; color:gray; margin-left:20px" ></a>    
+          
+        <input id="searchTextChat" style="font-size:18px; width:95%; height:50px; margin-left:-32px; border-style:none; background-color:antiquewhite; padding:5px;padding-left:35px; border-radius:10px" type="text" placeholder="搜尋字串" onchange="search已報名課程(this.value)" />
+        
+        <a id="serachClearChat" class="k-icon k-i-close" style="font-size:20px; color:gray; margin-left:-30px; margin-top:-4px" onclick="clearSearchTextChat()"></a>
+        
+        <script>
+          var inputChat = document.getElementById('searchTextChat');
+          input.onkeydown = function() {
+              var key = event.keyCode || event.charCode;
+              if( key == 8 ){
+                //console.log("backspace pressed", input.value);
+                if (inputChat.value.length==1 /* length=1is tricky */) {
+                  //console.log("empty");
+                  search已報名課程("");
+                }
+              }
+          };          
+        </script>
+      </div>
+      
+      <ul data-role="listview" data-source="navDataSource" data-pull-to-refresh="true" data-template="nav-template-chat" data-header-template="header-template-chat" class="main-menu">
+
+        <script type="text/x-kendo-template" id="header-template-chat">
+          <span class="km-icon km-#: value #"></span> #: value #
+          </script>
+
+        <script type="text/x-kendo-template" id="nav-template-chat">
+          <a href="#: url #" class="課程名稱">
+            <p style="font-size:16px; color: #: 繳費狀況顏色 #; border-width:2px; border-radius:5px;border-color:#: 繳費狀況顏色 # ; border-style:solid; float:right; margin-right:30px;padding-left:5px;padding-right:5px">#: 繳費狀況 # </p>
+            
+            <img src="#: 課程圖片 #" width="70" height="70" style="float:left;margin-right:10px"/>          
+            <p style="font-size:12px; color: gray; margin-top:-8px"> #: 課程編號 # </p>
+            <p style="font-size:16px; color: darkslategray; margin-top:-10px; font-weight:bold">#: 課程名稱 # </p>
+            <p style="font-size:12px; color: gray; margin-top:-10px">#: 老師時間 # </p>
+            <p style="font-size:12px; color: gray; margin-top:-10px;margin-bottom:-25px">#: 課程費用 # </p>            
+          </a>
+        </script>
+
+      </ul>
+     </div>
+  </div>
+  
+<!--  <h2 style="position: absolute; bottom: 50; left: 0" id="deleteMeChat">aaa</h2>-->
+
+  <script>
+      $("#ChatEnter").show();
+  </script>
+
+</body>
+
+</html>

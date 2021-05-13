@@ -14,8 +14,10 @@
 <body>
 
   <style>
-
   </style>
+  
+ 
+  
   <div data-role="view" data-init="initData"  data-title="聊天" style="text-align: center;font-family: 'Noto Sans TC'" data-use-native-scrolling="true">
    
     <div id="聊天Div" onclick="console.log('bbb')">         
@@ -26,10 +28,8 @@
 
   </div>
   
-  
-  <div data-role="view">
-      <a data-role="button"  data-click=""></a>
-  </div>
+   <div style="position: absolute; bottom: 0; left:0">Send Message ...</div>
+    
      
   <div data-role="modalview" id="modalview-img" style="width: 90%;">
 <!--
@@ -73,6 +73,7 @@
   </script>
 -->
 
+
   <script type="text/x-kendo-template" id="chattemplate" >
     <!-- <a class="reply km-primary km-button-right"
       style="color: white" data-role="button"
@@ -86,8 +87,9 @@
     />          
     <p style="font-size:12px; color: gray; margin-top:-4px" id ='#: message編號 #'> #: message編號 # </p> -->
     
-    <p style="font-size:12px; color: gray; float: left; margin-top:-15px" id ='#: message編號 #'> #: message編號 # </p>
-    <p style="font-size:16px; color: darkslategray; background-color:beige; padding:5px; width:80%; border-radius:5px" id ='msg_#:message編號#'>#: message內容 # </p>
+    <p style="font-size:16px; color: darkslategray; text-align:left; background-color:beige; padding:5px; width:80%; border-radius:5px;" id ='msgContent#:message編號#'>#: message內容 #</p>
+    
+    <p style="font-size:12px; color: gray; float: left; margin-top:-8px;" id ='msgTime#: message編號#'>#: message時間 #</p>
     
     </div>
 
@@ -125,49 +127,112 @@
 
       const messages = [
         { "message編號": '0001',
+          "messageType": 'text',
           "message內容": 'Hello',
-          "發送者":  'A',   
+          "發送者":  'notMe',   
+          "message時間": '2021/05/13 10:59',
           "message圖片":  '../btn.png',
         },
         { "message編號": '0002',
+          "messageType": 'img',         
           "message內容": 'What can I help you? hdjkhdksa khjdaksljdlajsda kjdsalkdjladja kjldsldjalj',
-          "發送者":  'B',   
+          "發送者":  'Me',   
+          "message時間": '2021/05/13 11:02',
+          "message圖片":  '../dog.png',
+        }, 
+        { "message編號": '0003',
+          "messageType": 'text',
+          "message內容": 'I need to buy a car.',
+          "發送者":  'notMe',   
+          "message時間": '2021/05/13 11:28',
+          "message圖片":  '../btn.png',
+        },
+        { "message編號": '0004',
+          "messageType": 'img',         
+          "message內容": 'What type of car do you wnat?',
+          "發送者":  'Me',   
+          "message時間": '2021/05/13 11:31',
+          "message圖片":  '../dog.png',
+        },   
+        { "message編號": '0005',
+          "messageType": 'text',
+          "message內容": 'Hello',
+          "發送者":  'notMe',   
+          "message時間": '2021/05/13 10:59',
+          "message圖片":  '../btn.png',
+        },
+        { "message編號": '0006',
+          "messageType": 'img',         
+          "message內容": 'What can I help you? hdjkhdksa khjdaksljdlajsda kjdsalkdjladja kjldsldjalj',
+          "發送者":  'Me',   
+          "message時間": '2021/05/13 11:02',
+          "message圖片":  '../dog.png',
+        }, 
+        { "message編號": '0007',
+          "messageType": 'text',
+          "message內容": 'I need to buy a car.',
+          "發送者":  'notMe',   
+          "message時間": '2021/05/13 11:28',
+          "message圖片":  '../btn.png',
+        },
+        { "message編號": '0008',
+          "messageType": 'img',         
+          "message內容": 'What type of car do you wnat?',
+          "發送者":  'Me',   
+          "message時間": '2021/05/13 11:31',
+          "message圖片":  '../dog.png',
+        },
+        { "message編號": '0009',
+          "messageType": 'text',
+          "message內容": 'Hello',
+          "發送者":  'notMe',   
+          "message時間": '2021/05/13 10:59',
+          "message圖片":  '../btn.png',
+        },
+        { "message編號": '0010',
+          "messageType": 'img',         
+          "message內容": 'What can I help you? hdjkhdksa khjdaksljdlajsda kjdsalkdjladja kjldsldjalj',
+          "發送者":  'Me',   
+          "message時間": '2021/05/13 11:02',
+          "message圖片":  '../dog.png',
+        }, 
+        { "message編號": '0011',
+          "messageType": 'text',
+          "message內容": 'I need to buy a car.',
+          "發送者":  'notMe',   
+          "message時間": '2021/05/13 11:28',
+          "message圖片":  '../btn.png',
+        },
+        { "message編號": '0012',
+          "messageType": 'img',         
+          "message內容": 'What type of car do you wnat?',
+          "發送者":  'Me',   
+          "message時間": '2021/05/13 11:31',
           "message圖片":  '../dog.png',
         },        
       ];      
       
+      
       for (var i=0; i< messages.length; i++){
+        const mesLength = messages[i].message內容.length;
+        console.log(mesLength);
+        
         dataSource.add(messages[i]);
-        if (messages[i].發送者 == 'B') {
-          console.log(messages[i]);
-          $()
+        if (messages[i].發送者 == 'Me') {
+          const msgId = "#msgContent"+messages[i].message編號;
+          const msgTimeId = "#msgTime"+messages[i].message編號;
+
+
+          $(msgId).css("text-align", "right");
+          $(msgId).css("margin-left","20%");
+          $(msgId).css("background", "aqua");
+          $(msgTimeId).css("float","right");
+          
         }
       }
-        
-//        var message圖片Url = "";
-//        dataSource.add({
-//      courseData.forEach(function(course, index, array){
-//        var message圖片Url = "";
-//        dataSource.add({  
-//          "message編號": course[0],
-//          "message內容": course[1],
-//            "老師姓名": course[2],
-//            "助教姓名": course[9],          
-//            "上課時間": course[3],  
-//            "燃燒熱量": course[4],
-//            "課程人數": course[6],
-//            "課程費用": course[5],
-//            "其他說明": course[10],
-//            "報名人數": course[7],
-//            "繳費人數": course[8],     
-//          "發送者及時間": course[2] + " | " + course[3],   
-//          "message圖片": message圖片Url,
-//          //"url": "2-views/course報名.html?courseId=" + "U0003",                  
-//          //"ProductName": "一起來運動",
-//          //"UnitPrice": 100
-//        });        
-//
-//      });   
+      
+      $("#messageTable>li").css("padding", "0px 14.837px");
+         
     }
         
     function messageBtn(messageId){

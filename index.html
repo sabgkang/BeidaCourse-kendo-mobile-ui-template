@@ -27,7 +27,7 @@
   <script src="js/loading.js"></script>    
 </head>
 
-<body id="body">
+<body>
   <!-- Google Tag Manager -->
   <!-- remarked by Paul Kang
     <noscript>
@@ -91,13 +91,13 @@
 
 <!--  <a class="k-icon k-i-search" style="position:absolute; top:50%; right:10px; z-index:1000";font-size:30px></a>-->
  
-  <div id="toBottom" style="display:none; position:absolute; top:50%; right:10px;z-index:1000;background-color:#33333333; color:darkslategray; text-align:center;width:45px;" onclick="scrollToBottom()">
+  <div id="toBottom" style="display:none; position:absolute; top:50%; right:10px;z-index:1000;background-color:#33333333; color:darkslategray; text-align:center;width:45px;" onclick="scrollToBottom('#toBottom')">
     <a style=" font-size:18px; font-weight:900; color:darkslategray" >最底</a>   
     <br>
     <a class="k-icon k-i-arrow-s"></a>   
   </div>
     
-  <div data-role="view" data-title="Tempelate v0.001" style="font-family: 'Noto Sans TC'" id="courseDiv" data-layout="" data-show="nullForNow" data-init="initSearch">
+  <div data-role="view" data-title="Tempelate v0.001" style="font-family: 'Noto Sans TC'; height:100%" id="courseDiv" data-layout="" data-show="mainShow" data-init="initMainListView">
     <header data-role="header">
       <div data-role="navbar" id="normal" class="km-accent">
 
@@ -134,7 +134,7 @@
 <!--      <a class="reply km-primary km-button-left" href="#2-views/團課日程.html" style="font-size: 18px; color: white; margin-left: 10px; " data-role="button" onclick="">報名課程</a>-->
       <a class="reply km-primary km-button-left" href="#2-views/團課日程.html" style="font-size: 18px; color: white; margin-left: 10px; " data-role="button" onclick="">報名課程</a>
       
-      <a class="reply km-primary km-button-left" href="#2-views/聊天.html" style="font-size: 18px; color: white; margin-left: 10px; " data-role="button" onclick="">聊天</a>
+      <a class="reply km-primary km-button-left"  href="index2.html" style="font-size: 18px; color: white; margin-left: 10px; " data-role="button" onclick="">聊天</a>
       <div style="height: 20px"></div>
 
       <br><br>
@@ -209,10 +209,12 @@
         </script>
 
       </ul>
-    </div>        
-    
-    <h2 id="deleteMe"></h2>
 
+    </div>
+  </div>  
+  
+<!--  <h2 style="position:absolute; bottom: 0; display:none" id="deleteMe"></h2>-->
+  <div id="ChatEnter" style="position:absolute; bottom: 10px; width:100%;">
   </div>
   
   <div id="forms" data-role="view" data-title="個人資料" data-init="initForm" data-use-native-scrolling="true" style="font-family: 'Noto Sans TC'">
@@ -343,6 +345,7 @@
     var 日曆選擇的日期;
     var 想報名的courseId;
     var show到底 = false;
+    var showInput = false;
       
     notInCourse=[];
     inCourse=[];
@@ -358,6 +361,10 @@
 //    checkUserIdExist();
     loadCourses = true;
         
+//    function hideFooter() {
+//      console.log("hide footer");
+//      app.navigate("index2.html");      
+//    }
   </script>
 
 </body>

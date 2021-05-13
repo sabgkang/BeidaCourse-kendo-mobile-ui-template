@@ -524,12 +524,13 @@ function search已報名課程(searchFor){
   });
 }
 
-function scrollToBottom(){
+function scrollToBottom(toBottomId){
+  console.log(toBottomId)
   const appScroller=app.view().scroller;
   const scrollDistance= appScroller.height() - appScroller.scrollHeight(); 
   if (scrollDistance < 0) {
     appScroller.animatedScrollTo(0,scrollDistance);
-    setTimeout(function(){$("#toBottom").hide()}, 500);
+    setTimeout(function(){$(toBottomId).hide()}, 500);
     show到底 = false;
   }
 }

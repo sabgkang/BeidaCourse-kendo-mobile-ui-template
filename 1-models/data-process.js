@@ -211,11 +211,25 @@ function getCourseHistory(data) {
   setTimeout(checkScroll, 500);
 }
 
+function mainShow(e) {
+  console.log("main page showed");
+  if (show到底) {
+    $("#toBottom").show();
+  } else {
+    $("#toBottom").hide();
+  }
 
-function nullForNow(e) {
-  console.log("Back to Main");
-  if (show到底) $("#toBottom").show();
-  //currentExample = nullForNow;
+  $("#ChatEnter").hide();
+}
+
+function chatShow(e) {
+  console.log("chat page showed");
+
+  const enterInputHTML = "<hr><input id=\"ChatEnterText\" type=\"text\" class=\"NotoSansFont\" placeholder=\"Type here ...\" style=\"border-width:0px;margin-left:20px; background:aqua;padding:10px; border-radius:10px; width:80%\"><span style=\"margin-left: 10px\" onclick=\"console.log('send a message')\">Send</span>";
+  
+  $("#ChatEnter").html(enterInputHTML);
+  $("#ChatEnter").show();
+
 }
 
 function removeView(e) {
@@ -235,22 +249,20 @@ function removeView(e) {
 
 }
 
-function initSearch(e) {
-  console.log("initSearch");
-  var searchBox = e.view.element.find("#demos-search");
+function initMainListView(e){
+  console.log("initMainListView");
+  var scroller = e.view.scroller;
+  scroller.bind("scroll", function(e) {
+    /* The result can be observed in the DevTools(F12) console of the browser. */
+    console.log("top***:",e.scrollTop);
+    /* The result can be observed in the DevTools(F12) console of the browser. */
+    console.log("left***:",e.scrollLeft);
+  });  
+}
 
-  searchBox.on("input", function () {
-    searchForCourse(searchBox.val()); //, product);
-  });
+function initChatListView(e) {
+  console.log("initChatListView");
 
-  searchBox.on("blur", function () {
-    //        if (searchBox.val() == "") {
-    //            hideSearch();
-    //        }
-    searchBox.val("");
-    searchForCourse("");
-    hideSearch();
-  });
 }
 
 var desktop = !kendo.support.mobileOS;
